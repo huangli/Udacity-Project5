@@ -31,6 +31,7 @@ my_dataset = data_dict
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
+print len(data[0])
 
 # for point in data:
 #     salary = point[1]
@@ -48,19 +49,22 @@ labels, features = targetFeatureSplit(data)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 from sklearn.pipeline import Pipeline
-# from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.decomposition import PCA
-# from sklearn.feature_selection import SelectKBest
+from sklearn import tree
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.model_selection import GridSearchCV
 # from sklearn.linear_model import LogisticRegression
 # clf = GaussianNB()
 # clf = SVC(kernel='linear', C=2)
-# clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', GaussianNB())])
-clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', SVC(kernel='poly'))])
+clf = Pipeline([('reduce_dim', PCA(n_components=8)), ('clf', GaussianNB())])
+# clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', SVC(kernel='poly'))])
 # clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', LogisticRegression())])
-# clf = Pipeline(estimators)
+# clf = Pipeline([('reduce_dim', PCA(n_components=3)), ('clf', tree.DecisionTreeClassifier())])
+# clf = Pipeline([('select', SelectKBest(f_classif, k=4)), ('clf', GaussianNB())])
 
-print clf
+
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall
 ### using our testing script. Check the tester.py script in the final project
