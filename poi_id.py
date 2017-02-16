@@ -130,7 +130,8 @@ labels, features = targetFeatureSplit(data)
 from sklearn import tree
 # from sklearn.feature_selection import SelectKBest, f_classif
 # from sklearn.model_selection import GridSearchCV
-# from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression
+clf = LogisticRegression()
 # clf = GaussianNB()
 # clf = SVC(kernel='linear', C=2)
 # clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', GaussianNB())])

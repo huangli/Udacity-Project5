@@ -18,7 +18,7 @@ restricted_stock_deferred, deferred_income, director_fees. Regarding the email f
 the correrlation between 'from_poi_to_this_person','from_this_person_to_poi' and 'shared_receipt_with_poi'
 it's all highly related, so I only keep one feature from email features: 'shared_receipt_with_poi'.
 I begin my test with decision tree classifier, as it turns out, only 'total_payments','restricted_stock_deferred', 'expenses'
-are corrleated to precision and recall.
+are important to precision and recall.
 
 
 #### scaling
@@ -26,4 +26,12 @@ are corrleated to precision and recall.
 I didn't do any scaling, the scaling is not helpful for decision tree algorithm.
 
 ### new feature
+
+I create a new feature 'whether_email_to_poi'. I think more emails to poi person
+doesn't necessary mean this person is more likely to be a poi, but whether email
+to poi is a strong evidence. The person who once emailed to poi, means they have a connection.
+But aftet test it with new feature, the precision drop to 0.24422 and recall drop to 0.23750.
+
+
+### Algorithm Chooseing
 
