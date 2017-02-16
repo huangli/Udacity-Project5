@@ -88,7 +88,7 @@ my_dataset = data_dict
 
 # print my_dataset
 ### Extract features and labels from dataset for local testing
-data = featureFormat(my_dataset, my_features_list, sort_keys = True)
+data = featureFormat(my_dataset, features_list, sort_keys = True)
 
 # print np.corrcoef(data[:,4],data[:,6])
 
@@ -105,7 +105,7 @@ def outlier_detect(data):
 idx = outlier_detect(data[:,1])
 from sets import Set
 outlier_idx = Set()
-for i in range(1,len(my_features_list)-1):
+for i in range(1,len(features_list)-1):
     idx = outlier_detect(data[:,i])
     for ii in idx[0]:
         outlier_idx.add(ii)
@@ -174,9 +174,9 @@ print "recall", recall_score(pred, labels_test)
 # print selector.scores_
 # clf.fit(features_train, labels_train)
 
-### Task 6: Dump your classifier, dataset, and my_features_list so anyone can
+### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
-dump_classifier_and_data(clf, my_dataset, my_features_list)
+dump_classifier_and_data(clf, my_dataset, features_list)
