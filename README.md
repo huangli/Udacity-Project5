@@ -37,7 +37,7 @@ So this is not a good new feature.
 ### 4. Pick and Tune an Algorithm
 
 I tried LogisticRegression, DecisionTreeClassifier and GaussianNB, you may see
-the log of parameters tuning in file "parameters tuning.log" file. The decision tree
+the log of parameters tuning in file "parameters tuning.md" file. The decision tree
 have better performance.
 
 ### 5. Validation Strategy and Performance
