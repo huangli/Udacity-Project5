@@ -96,7 +96,7 @@ data = featureFormat(my_dataset, features_list, sort_keys = True)
 
 
 ### remove outlier
-# print [abs(column_data - np.mean(column_data)) < 3 * np.std(column_data)]
+# remove data 3 standard deviation from mean
 def outlier_detect(data):
     outlier_indicate = abs(data - np.mean(data)) > 3 * np.std(data)
     outlier_idx = np.where(outlier_indicate==True)
@@ -110,7 +110,6 @@ for i in range(1,len(features_list)-1):
     for ii in idx[0]:
         outlier_idx.add(ii)
 
-# print outlier_idx
 data = np.delete(data, list(outlier_idx), 0)
 labels, features = targetFeatureSplit(data)
 

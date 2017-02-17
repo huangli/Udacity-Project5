@@ -46,9 +46,13 @@ In order to estimate how well the training model, we have to validate our traini
 We may over-fitting the training data set, so we have to use the validation data set
 to test our model. I split the data into 2 parts, 30% of the data is test data, 70% is training data,
 my peformance is below:
-precision 0.8 recall 0.444444444444
+
+> precision 0.8 recall 0.444444444444
+
 The test.py performance is below:
-Precision: 0.37569  Recall: 0.33850
+
+> Precision: 0.37569  Recall: 0.33850
+
 The precision means: The one who are poi and identified as poi divided by (The one who are poi and identified as poi + The one who aren't poi but identified as poi)
 The recall means: The one who are poi and identified as poi divided by (The one who are poi and identified as poi + The one who are poi but identified as not poi)
 
