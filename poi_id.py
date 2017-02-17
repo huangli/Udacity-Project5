@@ -124,15 +124,13 @@ labels, features = targetFeatureSplit(data)
 
 # Provided to give you a starting point. Try a variety of classifiers.
 # from sklearn.pipeline import Pipeline
-# from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB
 # from sklearn.svm import SVC
 # from sklearn.decomposition import PCA
 from sklearn import tree
 # from sklearn.feature_selection import SelectKBest, f_classif
 # from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
-clf = LogisticRegression()
-# clf = GaussianNB()
+# from sklearn.linear_model import LogisticRegression
 # clf = SVC(kernel='linear', C=2)
 # clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', GaussianNB())])
 # clf = Pipeline([('reduce_dim', PCA(n_components=4)), ('clf', SVC(kernel='poly'))])
@@ -157,8 +155,10 @@ features_train, features_test, labels_train, labels_test = \
 
 # pca = PCA(n_components = 2)
 # pca.fit(features_train)
-
-clf = tree.DecisionTreeClassifier()
+clf = tree.DecisionTreeClassifier(max_features=4, max_depth=6, min_samples_split=2)
+# clf = tree.DecisionTreeClassifier()
+# clf = GaussianNB()
+# clf = LogisticRegression()
 clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 
