@@ -8,7 +8,47 @@ A significant amount of typically confidential information entered into the publ
 we are trying to building a person of interest identifier algorithm,
 based on financial and email data made public as a result of the Enron scandal.
 
-### 2. Features and Scaling
+### 2. Data Exploration
+
+#### total number of data points
+
+There are 140 data points.
+
+#### allocation across classes (POI/non-POI)
+
+There 18 POI and 122 non-POI
+
+#### number of features used
+
+I use 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi'
+
+#### are there features with many missing values
+
+There are histograms about each feature in folder, the zero percent is calculated for each feature as below:
+
+| Features      | Zero Percent  |
+| ------------- |:-------------:|
+| salary        | 34%   |
+| deferral_payments| 73%      |
+| total_payments | 14%      |
+| loan_advances | 97%     |
+| bonus | 43%      |
+| restricted_stock_deferred |88%     |
+| deferred_income | 66%      |
+| total_stock_value | 13%     |
+| expenses | 34%      |
+| exercised_stock_options | 30%     |
+| other | 36%      |
+| long_term_incentive |54%     |
+| restricted_stock | 24%      |
+| director_fees | 88%      |
+| to_messages | 41%      |
+| from_poi_to_this_person |49%     |
+| from_messages | 41%     |
+| from_this_person_to_poi | 54%     |
+| shared_receipt_with_poi | 41%      |
+
+### 3. Features and Scaling
 
 #### Features
 
@@ -25,7 +65,7 @@ are important to precision and recall.
 
 I didn't do any scaling, I can't see there is any help for decision tree.
 
-### 3. New feature
+### 4. New feature
 
 I create a new feature 'whether_email_to_poi'. I think more emails to poi person
 doesn't necessary mean this person is more likely to be a poi, but whether email
@@ -34,13 +74,13 @@ But aftet test it with new feature, the precision drop to 0.24422 and recall dro
 So this is not a good new feature.
 
 
-### 4. Pick and Tune an Algorithm
+### 5. Pick and Tune an Algorithm
 
 I tried LogisticRegression, DecisionTreeClassifier and GaussianNB, you may see
 the log of parameters tuning in file "parameters tuning.md" file. The decision tree
 have better performance.
 
-### 5. Validation Strategy and Performance
+### 6. Validation Strategy and Performance
 
 In order to estimate how well the training model, we have to validate our training model.
 We may over-fitting the training data set, so we have to use the validation data set
