@@ -16,15 +16,15 @@ from tester import dump_classifier_and_data
 ### The first feature must be "poi".
 # You will need to use more features
 
-features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
-'to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
+# features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
+# 'to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
 
-### After explore all the features, remove loan_advances,
+## After explore all the features, remove loan_advances,
 # restricted_stock_deferred, deferred_income, director_fees
-# def hist_and_save_pic(data, name):
-#     sns_plot = sns.distplot(data,  kde=False, rug=True)
-#     sns.plt.show()
-#     sns_plot.get_figure().savefig(name+".png")
+def hist_and_save_pic(data, name):
+    sns_plot = sns.distplot(data,  kde=False, rug=True)
+    sns.plt.show()
+    sns_plot.get_figure().savefig(name+".png")
 #
 
 # # salary, a few outlier
@@ -68,12 +68,71 @@ features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_a
 # print sum(data[:,19] == 0)
 
 
-
+### data explore
+# print len(data)
+# # 15 zeros
+# # 50
+# print 'salary'
+# print sum(data[:,1] == 0)*1.0/len(data)
+# # 106
+# print 'deferral_payments'
+# print sum(data[:,2] == 0)*1.0/len(data)
+# # 20
+# print 'total_payments'
+# print sum(data[:,3] == 0)*1.0/len(data)
+# # 141
+# print 'loan_advances'
+# print sum(data[:,4] == 0)*1.0/len(data)
+# # 63
+# print 'bonus'
+# print sum(data[:,5] == 0)*1.0/len(data)
+# # 127
+# print 'restricted_stock_deferred'
+# print sum(data[:,6] == 0)*1.0/len(data)
+# # 96
+# print 'deferred_income'
+# print sum(data[:,7] == 0)*1.0/len(data)
+# # 19
+# print 'total_stock_value'
+# print sum(data[:,8] == 0)*1.0/len(data)
+# # 50
+# print 'expenses'
+# print sum(data[:,9] == 0)*1.0/len(data)
+# # 43
+# print 'exercised_stock_options'
+# print sum(data[:,10] == 0)*1.0/len(data)
+# # 52
+# print 'other'
+# print sum(data[:,11] == 0)*1.0/len(data)
+# # 79
+# print 'long_term_incentive'
+# print sum(data[:,12] == 0)*1.0/len(data)
+# # 35
+# print 'restricted_stock'
+# print sum(data[:,13] == 0)*1.0/len(data)
+# # 128
+# print 'director_fees'
+# print sum(data[:,14] == 0)*1.0/len(data)
+# # 59
+# print 'to_messages'
+# print sum(data[:,15] == 0)*1.0/len(data)
+# # 71
+# print 'from_poi_to_this_person'
+# print sum(data[:,16] == 0)*1.0/len(data)
+# # 59
+# print 'from_messages'
+# print sum(data[:,17] == 0)*1.0/len(data)
+# # 79
+# print 'from_this_person_to_poi'
+# print sum(data[:,18] == 0)*1.0/len(data)
+# # 59
+# print 'shared_receipt_with_poi'
+# print sum(data[:,19] == 0)*1.0/len(data)
 
 # features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
 
 
-# features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
+features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
  # add whether_email_to_poi
 # my_features_list = ['poi', 'total_payments', 'loan_advances', 'restricted_stock_deferred', 'expenses', 'whether_email_to_poi']
 
@@ -82,6 +141,7 @@ features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_a
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 my_dataset = data_dict
+# print len(my_dataset)
 
 ### Task 2: Remove outliers
 ### Task 3: Create new feature(s)
@@ -97,75 +157,39 @@ my_dataset = data_dict
 # print my_dataset
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
-
-### data explore
 # print len(data)
-# # 15 zeros
-# 50
-print 'salary'
-print sum(data[:,1] == 0)*1.0/len(data)
-# 106
-print 'deferral_payments'
-print sum(data[:,2] == 0)*1.0/len(data)
-# 20
-print 'total_payments'
-print sum(data[:,3] == 0)*1.0/len(data)
-# 141
-print 'loan_advances'
-print sum(data[:,4] == 0)*1.0/len(data)
-# 63
-print 'bonus'
-print sum(data[:,5] == 0)*1.0/len(data)
-# 127
-print 'restricted_stock_deferred'
-print sum(data[:,6] == 0)*1.0/len(data)
-# 96
-print 'deferred_income'
-print sum(data[:,7] == 0)*1.0/len(data)
-# 19
-print 'total_stock_value'
-print sum(data[:,8] == 0)*1.0/len(data)
-# 50
-print 'expenses'
-print sum(data[:,9] == 0)*1.0/len(data)
-# 43
-print 'exercised_stock_options'
-print sum(data[:,10] == 0)*1.0/len(data)
-# 52
-print 'other'
-print sum(data[:,11] == 0)*1.0/len(data)
-# 79
-print 'long_term_incentive'
-print sum(data[:,12] == 0)*1.0/len(data)
-# 35
-print 'restricted_stock'
-print sum(data[:,13] == 0)*1.0/len(data)
-# 128
-print 'director_fees'
-print sum(data[:,14] == 0)*1.0/len(data)
-# 59
-print 'to_messages'
-print sum(data[:,15] == 0)*1.0/len(data)
-# 71
-print 'from_poi_to_this_person'
-print sum(data[:,16] == 0)*1.0/len(data)
-# 59
-print 'from_messages'
-print sum(data[:,17] == 0)*1.0/len(data)
-# 79
-print 'from_this_person_to_poi'
-print sum(data[:,18] == 0)*1.0/len(data)
-# 59
-print 'shared_receipt_with_poi'
-print sum(data[:,19] == 0)*1.0/len(data)
-
-# print np.corrcoef(data[:,4],data[:,6])
-
-
-
-
 ### remove outlier
 labels, features = targetFeatureSplit(data)
+
+### remove outiliers
+df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
+# print df.describe().loc[:,['total_payments','restricted_stock_deferred','expenses', 'shared_receipt_with_poi']]
+# print data[:,2].max()
+def max_index(data, column):
+    outlier_idx = np.where(data[:,column] == data[:,column].max())
+    return outlier_idx
+
+def min_index(data, column):
+    outlier_idx = np.where(data[:,column] == data[:,column].min())
+    return outlier_idx
+
+outlier_idx = 0
+outlier_idx = max_index(data, 1)
+data = np.delete(data, outlier_idx, 0)
+outlier_idx = max_index(data, 1)
+data = np.delete(data, outlier_idx, 0)
+
+outlier_idx = max_index(data, 2)
+data = np.delete(data, outlier_idx, 0)
+outlier_idx = min_index(data, 2)
+data = np.delete(data, outlier_idx, 0)
+
+# hist_and_save_pic(data[:,1], "salary")
+# hist_and_save_pic(data[:,2], "restricted_stock_deferred")
+# hist_and_save_pic(data[:,3], "expenses")
+# hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
+# print len(data)
+
 
 ### create new feature, add whether_shared_receipt_with_poi
 

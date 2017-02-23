@@ -48,6 +48,13 @@ There are histograms about each feature in folder, the zero percent is calculate
 | from_this_person_to_poi | 54%     |
 | shared_receipt_with_poi | 41%      |
 
+#### outlier remove
+
+You may see the total_payments.png, expenses.png, restricted_stock_deferred.png
+and shared_receipt_with_poi.png file in folder, they are the distribution for correspoding
+feature, I remove all the outlier by hand, then check the distribution until it looks good.
+
+
 ### 3. Features and Scaling
 
 #### Features
