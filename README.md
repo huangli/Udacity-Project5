@@ -24,7 +24,7 @@ I use 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_
 
 #### are there features with many missing values
 
-There are histograms about each feature in folder, the zero percent is calculated for each feature as below:
+The zero percent is calculated for each feature as below:
 
 | Features      | Zero Percent  |
 | ------------- |:-------------:|
@@ -51,7 +51,10 @@ There are histograms about each feature in folder, the zero percent is calculate
 #### outlier remove
 
 You may see the total_payments.png, expenses.png, restricted_stock_deferred.png
-and shared_receipt_with_poi.png file in folder, they are the distribution for correspoding
+and shared_receipt_with_poi.png file below:
+![](file:///total_payments.png)
+
+they are the distribution for correspoding
 feature, I remove all the outlier by hand, then check the distribution until it looks good.
 
 
