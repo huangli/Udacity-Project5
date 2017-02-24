@@ -48,15 +48,80 @@ The zero percent is calculated for each feature as below:
 | from_this_person_to_poi | 54%     |
 | shared_receipt_with_poi | 41%      |
 
+The code below is how I get the number.
+
+```
+## data explore
+print len(data)
+# 15 zeros
+# 50
+print 'salary'
+print sum(data[:,1] == 0)*1.0/len(data)
+# 106
+print 'deferral_payments'
+print sum(data[:,2] == 0)*1.0/len(data)
+# 20
+print 'total_payments'
+print sum(data[:,3] == 0)*1.0/len(data)
+# 141
+print 'loan_advances'
+print sum(data[:,4] == 0)*1.0/len(data)
+# 63
+print 'bonus'
+print sum(data[:,5] == 0)*1.0/len(data)
+# 127
+print 'restricted_stock_deferred'
+print sum(data[:,6] == 0)*1.0/len(data)
+# 96
+print 'deferred_income'
+print sum(data[:,7] == 0)*1.0/len(data)
+# 19
+print 'total_stock_value'
+print sum(data[:,8] == 0)*1.0/len(data)
+# 50
+print 'expenses'
+print sum(data[:,9] == 0)*1.0/len(data)
+# 43
+print 'exercised_stock_options'
+print sum(data[:,10] == 0)*1.0/len(data)
+# 52
+print 'other'
+print sum(data[:,11] == 0)*1.0/len(data)
+# 79
+print 'long_term_incentive'
+print sum(data[:,12] == 0)*1.0/len(data)
+# 35
+print 'restricted_stock'
+print sum(data[:,13] == 0)*1.0/len(data)
+# 128
+print 'director_fees'
+print sum(data[:,14] == 0)*1.0/len(data)
+# 59
+print 'to_messages'
+print sum(data[:,15] == 0)*1.0/len(data)
+# 71
+print 'from_poi_to_this_person'
+print sum(data[:,16] == 0)*1.0/len(data)
+# 59
+print 'from_messages'
+print sum(data[:,17] == 0)*1.0/len(data)
+# 79
+print 'from_this_person_to_poi'
+print sum(data[:,18] == 0)*1.0/len(data)
+# 59
+print 'shared_receipt_with_poi'
+print sum(data[:,19] == 0)*1.0/len(data)
+```
+
 #### outlier remove
 
 You may see the total_payments.png, expenses.png, restricted_stock_deferred.png
 and shared_receipt_with_poi.png file below:
 
-![](/total_payments.png)
-![](/expenses.png)
-![](/restricted_stock_deferred.png)
-![](/shared_receipt_with_poi.png)
+![total_payments](/total_payments.png)
+![expenses](/expenses.png)
+![restricted_stock_deferred](/restricted_stock_deferred.png)
+![shared_receipt_with_poi](/shared_receipt_with_poi.png)
 
 they are the distribution for correspoding
 feature, I remove all the outlier by hand, then check the distribution until it looks good.
@@ -87,6 +152,14 @@ to poi is a strong evidence. The person who once emailed to poi, means they have
 But aftet test it with new feature, the precision drop to 0.24422 and recall drop to 0.23750.
 So this is not a good new feature.
 
+```
+# Code about new feature
+for k1 in my_dataset:
+    if my_dataset[k1]['from_this_person_to_poi'] == 'NaN':
+        my_dataset[k1]['whether_email_to_poi'] = 0
+    else:
+        my_dataset[k1]['whether_email_to_poi'] = 1
+```
 
 ### 5. Pick and Tune an Algorithm
 

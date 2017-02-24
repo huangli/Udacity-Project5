@@ -16,8 +16,8 @@ from tester import dump_classifier_and_data
 ### The first feature must be "poi".
 # You will need to use more features
 
-# features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
-# 'to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
+features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
+'to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
 
 ## After explore all the features, remove loan_advances,
 # restricted_stock_deferred, deferred_income, director_fees
@@ -27,7 +27,7 @@ def hist_and_save_pic(data, name):
     sns_plot.get_figure().savefig(name+".png")
 #
 
-# # salary, a few outlier
+# salary, a few outlier
 # hist_and_save_pic(data[:,1], "salary")
 # deferral payments, a few outlier
 # hist_and_save_pic(data[:,2], "deferral_payments")
@@ -67,72 +67,10 @@ def hist_and_save_pic(data, name):
 # hist_and_save_pic((data[:,4]), "shared_receipt_with_poi")
 # print sum(data[:,19] == 0)
 
-
-### data explore
-# print len(data)
-# # 15 zeros
-# # 50
-# print 'salary'
-# print sum(data[:,1] == 0)*1.0/len(data)
-# # 106
-# print 'deferral_payments'
-# print sum(data[:,2] == 0)*1.0/len(data)
-# # 20
-# print 'total_payments'
-# print sum(data[:,3] == 0)*1.0/len(data)
-# # 141
-# print 'loan_advances'
-# print sum(data[:,4] == 0)*1.0/len(data)
-# # 63
-# print 'bonus'
-# print sum(data[:,5] == 0)*1.0/len(data)
-# # 127
-# print 'restricted_stock_deferred'
-# print sum(data[:,6] == 0)*1.0/len(data)
-# # 96
-# print 'deferred_income'
-# print sum(data[:,7] == 0)*1.0/len(data)
-# # 19
-# print 'total_stock_value'
-# print sum(data[:,8] == 0)*1.0/len(data)
-# # 50
-# print 'expenses'
-# print sum(data[:,9] == 0)*1.0/len(data)
-# # 43
-# print 'exercised_stock_options'
-# print sum(data[:,10] == 0)*1.0/len(data)
-# # 52
-# print 'other'
-# print sum(data[:,11] == 0)*1.0/len(data)
-# # 79
-# print 'long_term_incentive'
-# print sum(data[:,12] == 0)*1.0/len(data)
-# # 35
-# print 'restricted_stock'
-# print sum(data[:,13] == 0)*1.0/len(data)
-# # 128
-# print 'director_fees'
-# print sum(data[:,14] == 0)*1.0/len(data)
-# # 59
-# print 'to_messages'
-# print sum(data[:,15] == 0)*1.0/len(data)
-# # 71
-# print 'from_poi_to_this_person'
-# print sum(data[:,16] == 0)*1.0/len(data)
-# # 59
-# print 'from_messages'
-# print sum(data[:,17] == 0)*1.0/len(data)
-# # 79
-# print 'from_this_person_to_poi'
-# print sum(data[:,18] == 0)*1.0/len(data)
-# # 59
-# print 'shared_receipt_with_poi'
-# print sum(data[:,19] == 0)*1.0/len(data)
-
 # features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
 
 
-features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
+# features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
  # add whether_email_to_poi
 # my_features_list = ['poi', 'total_payments', 'loan_advances', 'restricted_stock_deferred', 'expenses', 'whether_email_to_poi']
 
@@ -162,32 +100,32 @@ data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 
 ### remove outiliers
-df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
+# df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
 # print df.describe().loc[:,['total_payments','restricted_stock_deferred','expenses', 'shared_receipt_with_poi']]
 # print data[:,2].max()
-def max_index(data, column):
-    outlier_idx = np.where(data[:,column] == data[:,column].max())
-    return outlier_idx
+# def max_index(data, column):
+#     outlier_idx = np.where(data[:,column] == data[:,column].max())
+#     return outlier_idx
 
-def min_index(data, column):
-    outlier_idx = np.where(data[:,column] == data[:,column].min())
-    return outlier_idx
+# def min_index(data, column):
+#     outlier_idx = np.where(data[:,column] == data[:,column].min())
+#     return outlier_idx
 
-outlier_idx = 0
-outlier_idx = max_index(data, 1)
-data = np.delete(data, outlier_idx, 0)
-outlier_idx = max_index(data, 1)
-data = np.delete(data, outlier_idx, 0)
+# outlier_idx = 0
+# outlier_idx = max_index(data, 1)
+# data = np.delete(data, outlier_idx, 0)
+# outlier_idx = max_index(data, 1)
+# data = np.delete(data, outlier_idx, 0)
 
-outlier_idx = max_index(data, 2)
-data = np.delete(data, outlier_idx, 0)
-outlier_idx = min_index(data, 2)
-data = np.delete(data, outlier_idx, 0)
+# outlier_idx = max_index(data, 2)
+# data = np.delete(data, outlier_idx, 0)
+# outlier_idx = min_index(data, 2)
+# data = np.delete(data, outlier_idx, 0)
 
-hist_and_save_pic(data[:,1], "total_payments")
-hist_and_save_pic(data[:,2], "restricted_stock_deferred")
-hist_and_save_pic(data[:,3], "expenses")
-hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
+# hist_and_save_pic(data[:,1], "total_payments")
+# hist_and_save_pic(data[:,2], "restricted_stock_deferred")
+# hist_and_save_pic(data[:,3], "expenses")
+# hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
 # print len(data)
 
 
@@ -205,7 +143,7 @@ from sklearn.naive_bayes import GaussianNB
 # from sklearn.svm import SVC
 # from sklearn.decomposition import PCA
 from sklearn import tree
-# from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.feature_selection import SelectKBest, f_classif
 # from sklearn.model_selection import GridSearchCV
 # from sklearn.linear_model import LogisticRegression
 # clf = SVC(kernel='linear', C=2)
@@ -232,6 +170,27 @@ features_train, features_test, labels_train, labels_test = \
 
 # pca = PCA(n_components = 2)
 # pca.fit(features_train)
+selector = SelectKBest(f_classif, k=10)
+selector.fit(features_train, labels_train)
+# print selector.scores_
+# print selector.get_support()
+# print selector.scores_[selector.get_support()]
+# print len(selector.scores_)
+# print len(selector.get_support())
+# print features_list[1:]
+# print selector.scores_[selector.get_support()]
+# sns_plot = sns.barplot(x=features_list[1:], y=selector.scores_)
+# sns_plot.plt.show()
+# print len(features_list[1:])
+# print len(selector.scores_)
+# print type(selector.scores_)
+labels = features_list[1:]
+data = selector.scores_
+plt.bar(range(len(data)), data, color="blue")
+plt.xticks(range(len(data)), labels, rotation="vertical")
+plt.show()
+
+
 clf = tree.DecisionTreeClassifier(max_features=4, max_depth=6, min_samples_split=2)
 # clf = tree.DecisionTreeClassifier()
 # clf = GaussianNB()
