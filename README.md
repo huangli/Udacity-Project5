@@ -52,7 +52,11 @@ The zero percent is calculated for each feature as below:
 
 You may see the total_payments.png, expenses.png, restricted_stock_deferred.png
 and shared_receipt_with_poi.png file below:
-![](file:///total_payments.png)
+
+![](/total_payments.png)
+![](/expenses.png)
+![](/restricted_stock_deferred.png)
+![](/shared_receipt_with_poi.png)
 
 they are the distribution for correspoding
 feature, I remove all the outlier by hand, then check the distribution until it looks good.
