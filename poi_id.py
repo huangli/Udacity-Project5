@@ -22,8 +22,8 @@ from tester import dump_classifier_and_data
 ## After explore all the features, remove loan_advances,
 # restricted_stock_deferred, deferred_income, director_fees
 def hist_and_save_pic(data, name):
-    sns_plot = sns.distplot(data,  kde=False, rug=True)
-    sns.plt.show()
+    sns_plot = sns.distplot(data,  kde=False, rug=True, axlabel=name)
+    # sns.plt.show()
     sns_plot.get_figure().savefig(name+".png")
 #
 
@@ -184,10 +184,10 @@ data = np.delete(data, outlier_idx, 0)
 outlier_idx = min_index(data, 2)
 data = np.delete(data, outlier_idx, 0)
 
-# hist_and_save_pic(data[:,1], "salary")
-# hist_and_save_pic(data[:,2], "restricted_stock_deferred")
-# hist_and_save_pic(data[:,3], "expenses")
-# hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
+hist_and_save_pic(data[:,1], "total_payments")
+hist_and_save_pic(data[:,2], "restricted_stock_deferred")
+hist_and_save_pic(data[:,3], "expenses")
+hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
 # print len(data)
 
 
