@@ -16,14 +16,18 @@ from tester import dump_classifier_and_data
 ### The first feature must be "poi".
 # You will need to use more features
 
-features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
-'to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
+features_list = ['poi', 'to_messages', 'from_poi_to_this_person', 'salary',
+'total_payments','director_fees', 'deferral_payments',  'loan_advances',
+'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses',
+'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock',
+ 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
 
 ## After explore all the features, remove loan_advances,
 # restricted_stock_deferred, deferred_income, director_fees
 def hist_and_save_pic(data, name):
     sns_plot = sns.distplot(data,  kde=False, rug=True, axlabel=name)
-    # sns.plt.show()
+    sns.plt.show()
+    # sns_plot.subplots.set_title(name)
     sns_plot.get_figure().savefig(name+".png")
 #
 
@@ -101,6 +105,11 @@ labels, features = targetFeatureSplit(data)
 # df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
 # print df.describe().loc[:,['total_payments','restricted_stock_deferred','expenses', 'shared_receipt_with_poi']]
 # print data[:,2].max()
+
+# to_messages
+# from_this_person_to_poi
+# total_payments
+# director_fees
 def max_index(data, column):
     outlier_idx = np.where(data[:,column] == data[:,column].max())
     return outlier_idx
@@ -110,20 +119,15 @@ def min_index(data, column):
     return outlier_idx
 
 outlier_idx = 0
-outlier_idx = max_index(data, 1)
+outlier_idx = max_index(data, 3)
 data = np.delete(data, outlier_idx, 0)
-outlier_idx = max_index(data, 1)
-data = np.delete(data, outlier_idx, 0)
-
-outlier_idx = max_index(data, 2)
-data = np.delete(data, outlier_idx, 0)
-outlier_idx = min_index(data, 2)
+outlier_idx = max_index(data, 4)
 data = np.delete(data, outlier_idx, 0)
 
-# hist_and_save_pic(data[:,1], "total_payments")
-# hist_and_save_pic(data[:,2], "restricted_stock_deferred")
-# hist_and_save_pic(data[:,3], "expenses")
-# hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
+# hist_and_save_pic(data[:,1], "to_messages")
+# hist_and_save_pic(data[:,2], "from_this_person_to_poi")
+# hist_and_save_pic(data[:,3], "total_payments")
+# hist_and_save_pic(data[:,4], "director_fees")
 # print len(data)
 
 
@@ -199,6 +203,8 @@ features_train, features_test, labels_train, labels_test = \
 #                     }
 
 # # Decision tree parameters
+
+
 tuned_parameters = {
                        'clf__C': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 1e2, 1e5],
                        'clf__gamma': [0.0, 0.1, 0.2, 0.3],
@@ -218,7 +224,8 @@ a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='
 a_grid_search.fit(features, labels)
 clf = a_grid_search.best_estimator_
 
-print "clf",clf
+
+# print "clf",clf
 # print a_grid_search.best_score_
 
 

@@ -131,22 +131,22 @@ def min_index(data, column):
     return outlier_idx
 
 outlier_idx = 0
-outlier_idx = max_index(data, 1)
+outlier_idx = max_index(data, 3)
 data = np.delete(data, outlier_idx, 0)
-outlier_idx = max_index(data, 1)
+outlier_idx = max_index(data, 4)
 data = np.delete(data, outlier_idx, 0)
 
-outlier_idx = max_index(data, 2)
-data = np.delete(data, outlier_idx, 0)
-outlier_idx = min_index(data, 2)
-data = np.delete(data, outlier_idx, 0)
+hist_and_save_pic(data[:,1], "to_messages")
+hist_and_save_pic(data[:,2], "from_this_person_to_poi")
+hist_and_save_pic(data[:,3], "total_payments")
+hist_and_save_pic(data[:,4], "director_fees")
 ```
 
 
 ### 3. Features and Scaling
 #### 3.1 Features Selection
 I use SelectKBest to pick features, and select the top 4 features who get higher scores, you may see the pic below.
-![feature scores.png](/feature scores.png.png)
+![feature scores.png](/feature scores.png)
 The code is below.
 ```
 labels = features_list[1:]
