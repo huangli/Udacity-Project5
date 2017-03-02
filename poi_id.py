@@ -120,10 +120,10 @@ data = np.delete(data, outlier_idx, 0)
 outlier_idx = min_index(data, 2)
 data = np.delete(data, outlier_idx, 0)
 
-hist_and_save_pic(data[:,1], "total_payments")
-hist_and_save_pic(data[:,2], "restricted_stock_deferred")
-hist_and_save_pic(data[:,3], "expenses")
-hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
+# hist_and_save_pic(data[:,1], "total_payments")
+# hist_and_save_pic(data[:,2], "restricted_stock_deferred")
+# hist_and_save_pic(data[:,3], "expenses")
+# hist_and_save_pic(data[:,4], "shared_receipt_with_poi")
 # print len(data)
 
 
@@ -168,8 +168,8 @@ from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import StratifiedShuffleSplit
 from sklearn.preprocessing import MinMaxScaler
 
-# features_train, features_test, labels_train, labels_test = \
-#     train_test_split(features, labels, test_size=0.3, random_state=42)
+features_train, features_test, labels_train, labels_test = \
+    train_test_split(features, labels, test_size=0.2, random_state=42)
 
 
 # pca = PCA(n_components = 2)
@@ -213,50 +213,65 @@ tuned_parameters = {
 pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
                 ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
                 ('clf', SVC())])
-# pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)), ('clf', SVC())])
 cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
-a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='recall')
-# a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters,  scoring='precision')
+a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
 a_grid_search.fit(features, labels)
 clf = a_grid_search.best_estimator_
 
 print "clf",clf
-print a_grid_search.best_score_
+# print a_grid_search.best_score_
+
 
 
 # selectkBest
 # labels = features_list[1:]
-# selector = PCA(n_components=4)
 # selector = SelectKBest(f_classif, k=10)
-# selector.train(features, labels)
-# print selector.scores_
+# selector.fit(features_train, labels_train)
 # data = []
 # labels = []
-# print selector.scores_
+# # print selector.scores_
 # top_index = sorted(range(len(selector.scores_)), key=lambda i: selector.scores_[i])[-10:]
 # for i in top_index:
 #     labels.append(features_list[i])
 #     data.append(selector.scores_[i])
+# # print data
 # # print labels
-# plt.bar(range(len(data)), data, color="blue")
-# plt.xticks(range(len(data)), labels, rotation="vertical")
+
+
+# fig, ax = plt.subplots()
+# ind = range(len(labels))
+# width = 0.2
+# rects1 = ax.bar(ind, data, width, color='blue')
+# ax.set_ylabel('Scores')
+# ax.set_title('Feature Scores')
+# ax.set_xticks(ind)
+# ax.set_xticklabels(labels, rotation=45)
+# plt.tight_layout()
 # plt.show()
+# fig.savefig('feature scores.png')
+
+
+
+# plt.bar(range(len(data)), data, color="blue")
+# plt.xticks(range(len(labels)), labels, rotation="vertical")
+# plt.show()
+# plt.figure().savefig('features.png')
 
 
 # clf = tree.DecisionTreeClassifier(max_features=4, max_depth=6, min_samples_split=2)
 # clf = tree.DecisionTreeClassifier()
 # clf = GaussianNB()
 # clf = LogisticRegression()
-# clf.fit(features_train, labels_train)
-# pred = clf.predict(features_test)
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
 
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 
-# print "accuracy", accuracy_score(pred, labels_test)
-# print "precision", precision_score(pred, labels_test)
-# print "recall", recall_score(pred, labels_test)
+print "accuracy", accuracy_score(pred, labels_test)
+print "precision", precision_score(pred, labels_test)
+print "recall", recall_score(pred, labels_test)
 
 # selector = SelectKBest(f_classif, k=5).fit(features_train, labels_train)
 # print selector.get_support()

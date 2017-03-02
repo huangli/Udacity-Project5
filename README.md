@@ -10,19 +10,15 @@ based on financial and email data made public as a result of the Enron scandal.
 
 ### 2. Data Exploration
 
-#### total number of data points
+#### 2.1 total number of data points
 
 There are 140 data points.
 
-#### allocation across classes (POI/non-POI)
+#### 2.2 allocation across classes (POI/non-POI)
 
-There 18 POI and 122 non-POI
+There 18 POI and 122 non-POI.
 
-#### number of features used
-
-I use 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi'
-
-#### are there features with many missing values
+#### 2.3 are there features with many missing values
 
 The zero percent is calculated for each feature as below:
 
@@ -48,7 +44,7 @@ The zero percent is calculated for each feature as below:
 | from_this_person_to_poi | 54%     |
 | shared_receipt_with_poi | 41%      |
 
-The code below is how I get the number.
+The code below is how I get the number. You may find png files in folder, it's the histogram for all features.
 
 ```
 ## data explore
@@ -113,44 +109,75 @@ print 'shared_receipt_with_poi'
 print sum(data[:,19] == 0)*1.0/len(data)
 ```
 
-#### outlier remove
+#### 2.4 outlier remove
 
-You may see the total_payments.png, expenses.png, restricted_stock_deferred.png
-and shared_receipt_with_poi.png file below:
+You may see the to_messages.png, from_this_person_to_poi.png, total_payments.png, and director_fees.png file below:
 
+![to_messages](/to_messages.png)
+![from_this_person_to_poi](/from_this_person_to_poi.png)
 ![total_payments](/total_payments.png)
-![expenses](/expenses.png)
-![restricted_stock_deferred](/restricted_stock_deferred.png)
-![shared_receipt_with_poi](/shared_receipt_with_poi.png)
+![director_fees](/director_fees.png)
 
 they are the distribution for correspoding
-feature, I remove all the outlier by hand, then check the distribution until it looks good.
+feature, I remove all the outlier by hand, then check the distribution until it looks good.Below is the code how I get the pic:
+
+```
+def max_index(data, column):
+    outlier_idx = np.where(data[:,column] == data[:,column].max())
+    return outlier_idx
+
+def min_index(data, column):
+    outlier_idx = np.where(data[:,column] == data[:,column].min())
+    return outlier_idx
+
+outlier_idx = 0
+outlier_idx = max_index(data, 1)
+data = np.delete(data, outlier_idx, 0)
+outlier_idx = max_index(data, 1)
+data = np.delete(data, outlier_idx, 0)
+
+outlier_idx = max_index(data, 2)
+data = np.delete(data, outlier_idx, 0)
+outlier_idx = min_index(data, 2)
+data = np.delete(data, outlier_idx, 0)
+```
 
 
 ### 3. Features and Scaling
+#### 3.1 Features Selection
+I use SelectKBest to pick features, and select the top 4 features who get higher scores, you may see the pic below.
+![feature scores.png](/feature scores.png.png)
+The code is below.
+```
+labels = features_list[1:]
+selector = SelectKBest(f_classif, k=10)
+selector.fit(features_train, labels_train)
+data = []
+labels = []
+# print selector.scores_
+top_index = sorted(range(len(selector.scores_)), key=lambda i: selector.scores_[i])[-10:]
+for i in top_index:
+    labels.append(features_list[i])
+    data.append(selector.scores_[i])
 
-#### Features
+fig, ax = plt.subplots()
+ind = range(len(labels))
+width = 0.2
+rects1 = ax.bar(ind, data, width, color='blue')
+ax.set_ylabel('Scores')
+ax.set_title('Feature Scores')
+ax.set_xticks(ind)
+ax.set_xticklabels(labels, rotation=45)
+plt.tight_layout()
+plt.show()
+fig.savefig('feature scores.png')
+```
 
-I create a function hist_and_save_pic which is now commented im poi_id.py, it will print and save
-the feature histogram in png file. After explore all the features, I remove loan_advances,
-restricted_stock_deferred, deferred_income, director_fees. Regarding the email features, I test
-the correrlation between 'from_poi_to_this_person','from_this_person_to_poi' and 'shared_receipt_with_poi'
-it's all highly related, so I only keep one feature from email features: 'shared_receipt_with_poi'.
-I begin my test with decision tree classifier, as it turns out, only 'total_payments','restricted_stock_deferred', 'expenses'
-are important to precision and recall.
-
-
-#### Scaling
-
-I didn't do any scaling, I can't see there is any help for decision tree.
-
-### 4. New feature
-
-I create a new feature 'whether_email_to_poi'. I think more emails to poi person
+#### 3.2 New Feature
+When I am tuning algorithm DecisionTree, I create a new feature 'whether_email_to_poi'. I think more emails to poi person
 doesn't necessary mean this person is more likely to be a poi, but whether email
 to poi is a strong evidence. The person who once emailed to poi, means they have a connection.
-But aftet test it with new feature, the precision drop to 0.24422 and recall drop to 0.23750.
-So this is not a good new feature.
+But aftet test it with new feature, the precision drops so this is not a good new feature.
 
 ```
 # Code about new feature
@@ -161,28 +188,69 @@ for k1 in my_dataset:
         my_dataset[k1]['whether_email_to_poi'] = 1
 ```
 
-### 5. Pick and Tune an Algorithm
+#### 3.3 Scaling
 
-I tried LogisticRegression, DecisionTreeClassifier and GaussianNB, you may see
-the log of parameters tuning in file "parameters tuning.md" file. The decision tree
-have better performance.
+I use the MinMaxScaler for svm, since scaling is critical for svm I use a simple scaler but easy to deploy. It helps a lot to improve my precesion.
 
-### 6. Validation Strategy and Performance
+### 4. Pick and Tune an Algorithm
 
-In order to estimate how well the training model, we have to validate our training model.
-We may over-fitting the training data set, so we have to use the validation data set
-to test our model. I split the data into 2 parts, 30% of the data is test data, 70% is training data,
-my peformance is below:
+I tried SVM and DecisionTreeClassifier, and tune the parameters by GridSearchCV. You may see the code below:
 
-> precision 0.8 recall 0.444444444444
+**SVM**
+```
+tuned_parameters = {
+                       'clf__C': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 1e2, 1e5],
+                       'clf__gamma': [0.0, 0.1, 0.2, 0.3],
+                       'clf__kernel': ['rbf', 'poly'],
+                       'clf__tol': [1e-1, 1e-2, 1e-4, 1e-5],
+                       'clf__class_weight': [{True: 12, False: 1},
+                                               {True: 4, False: 1},
+                                               {True: 1, False: 1},
+                                                ]
+                      }
 
-The test.py performance is below:
+pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
+                ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
+                ('clf', SVC())])
+# pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)), ('clf', SVC())])
+cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
+a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
+a_grid_search.fit(features, labels)
+print a_grid_search.best_score_
+```
+**DecisionTree**
+```
+ tuned_parameters = {'clf__max_depth': [2, 3, 4, 5, 6, 7, 8, 9, 10],
+                     'clf__min_samples_split': [2, 3, 4, 5, 6, 7, 8, 9, 10],
+                     'clf__min_samples_leaf': [2, 3, 4, 5, 6, 7, 8, 9, 10]
+                     }
+pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
+                ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
+                ('clf', tree.DecisionTreeClassifier)])
+cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
+a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
+a_grid_search.fit(features, labels)
+print a_grid_search.best_score_
+```
 
-> Precision: 0.37569  Recall: 0.33850
+### 5. Validation and Performance
+#### 5.1 Metrics
+Precesion
+> proportion of POI and those who are incorrectly identified as poi
 
-The precision means: The one who are poi and identified as poi divided by (The one who are poi and identified as poi + The one who aren't poi but identified as poi)
-The recall means: The one who are poi and identified as poi divided by (The one who are poi and identified as poi + The one who are poi but identified as not poi)
+Recall
+> proportion of POI and those who are incorrectly identified as non-poi
 
+
+#### 5.2 Validation
+
+Learning the parameters of a prediction function and testing it on the same data is a methodological mistake: a model that would just repeat the labels of the samples that it has just seen would have a perfect score but would fail to predict anything useful on yet-unseen data. This situation is called overfitting. So we need to split our dataset into 2 parts, training data to train our algorithm, and test data to validate performance.
+
+#### 5.3 Results
+
+Testing by test.py
+> Accuracy: 0.81713 Precision: 0.33423  Recall: 0.37450 F1: 0.35322 F2: 0.36569
+  Total predictions: 15000  True positives:  749  False positives: 1492 False negatives: 1251 True negatives: 11508
 
 
 
