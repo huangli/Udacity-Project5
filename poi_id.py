@@ -28,50 +28,9 @@ def hist_and_save_pic(data, name):
     sns_plot = sns.distplot(data,  kde=False, rug=True, axlabel=name)
     sns.plt.show()
     # sns_plot.subplots.set_title(name)
-    sns_plot.get_figure().savefig(name+".png")
+    sns_plot.get_figure().savefig('Pic/' + name +".png")
 #
 
-# salary, a few outlier
-# hist_and_save_pic(data[:,1], "salary")
-# deferral payments, a few outlier
-# hist_and_save_pic(data[:,2], "deferral_payments")
-# # total_payments, a few outlier
-# hist_and_save_pic(data[:,1], "total_payments")
-# loan_advances, mostly zeros, not a good feature
-# hist_and_save_pic(data[:,4], "loan_advances")
-# bonus, some zeros, a few outlier
-# hist_and_save_pic(data[:,5], "bonus")
-# restricted_stock_deferred, mostly zeros, not a good feature
-# hist_and_save_pic(data[:,2], "restricted_stock_deferred")
-# deferred_income, mostly zeros, not a good feature
-# hist_and_save_pic(data[:,7], "deferred_income")
-# total_stock_value, a few outliers
-# hist_and_save_pic((data[:,8]), "total_stock_value")
-# expenses, a few outliers
-# hist_and_save_pic((data[:,3]), "expenses")
-# exercised_stock_options, a few outliers
-# hist_and_save_pic((data[:,10]), "exercised_stock_options")
-# other, a few outliers
-# hist_and_save_pic((data[:,11]), "other")
-# long_term_incentive, half of is zero
-# hist_and_save_pic((data[:,12]), "long_term_incentive")
-# restricted_stock, a few outliers
-# hist_and_save_pic((data[:,13]), "restricted_stock")
-# director_fees, mostly zeros, not a good feature
-# hist_and_save_pic((data[:,14]), "director_fees")
-# to_messages, 59 zeros
-# hist_and_save_pic((data[:,15]), "to_messages")
-# from_poi_to_this_person, half of zero
-# hist_and_save_pic((data[:,16]), "from_poi_to_this_person")
-# from_messages, 59 zeros
-# hist_and_save_pic((data[:,17]), "from_messages")
-# from_this_person_to_poi, 79 zeros
-# hist_and_save_pic((data[:,18]), "from_this_person_to_poi")
-# shared_receipt_with_poi, 59 zeros
-# hist_and_save_pic((data[:,4]), "shared_receipt_with_poi")
-# print sum(data[:,19] == 0)
-
-# features_list = ['poi', 'total_payments','restricted_stock_deferred', 'expenses', 'shared_receipt_with_poi']
  # add whether_email_to_poi
 # my_features_list = ['poi', 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus', 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses', 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
 # 'to_messages', 'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
@@ -100,6 +59,7 @@ data = featureFormat(my_dataset, features_list, sort_keys = True)
 # print len(data)
 ### remove outlier
 labels, features = targetFeatureSplit(data)
+hist_and_save_pic(data[:,1], "salary")
 
 ### remove outiliers
 # df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
