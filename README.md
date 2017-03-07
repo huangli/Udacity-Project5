@@ -161,7 +161,7 @@ del(my_dataset[max_outlier])
 ### 3. Features and Scaling
 #### 3.1 Features Selection
 I use SelectKBest to pick features, and select the top 4 features who get higher scores, you may see the pic below.
-![feature scores.png](/feature scores.png)
+![Pic/feature scores.png](/feature scores.png)
 The code is below.
 ```
 labels = features_list[1:]

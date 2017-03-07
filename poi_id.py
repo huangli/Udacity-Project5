@@ -119,7 +119,7 @@ tuned_parameters = {
 pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
                 ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
                 ('clf', SVC())])
-cv = StratifiedShuffleSplit(labels, n_iter = 30, test_size=0.2, random_state = 42)
+cv = StratifiedShuffleSplit(labels, n_iter = 20, test_size=0.2, random_state = 42)
 a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
 a_grid_search.fit(features, labels)
 clf = a_grid_search.best_estimator_
