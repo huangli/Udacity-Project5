@@ -111,35 +111,50 @@ print sum(data[:,19] == 0)*1.0/len(data)
 
 #### 2.4 outlier remove
 
-You may see the to_messages.png, from_this_person_to_poi.png, total_payments.png, and director_fees.png file below:
-
-![to_messages](/to_messages.png)
-![from_this_person_to_poi](/from_this_person_to_poi.png)
-![total_payments](/total_payments.png)
-![director_fees](/director_fees.png)
-
-they are the distribution for correspoding
-feature, I remove all the outlier by hand, then check the distribution until it looks good.Below is the code how I get the pic:
+First I remove all rows which the 4 features(please refer to 3.1 feature selection) are NaN
 
 ```
-def max_index(data, column):
-    outlier_idx = np.where(data[:,column] == data[:,column].max())
-    return outlier_idx
+to_delete_idx = []
+for k in my_dataset:
+    if (my_dataset[k]['to_messages'] == 'NaN') \
+    and (my_dataset[k]['from_this_person_to_poi'] == 'NaN') \
+    and (my_dataset[k]['total_payments'] == 'NaN') \
+    and (my_dataset[k]['director_fees'] == 'NaN'):
+        to_delete_idx.append(k)
 
-def min_index(data, column):
-    outlier_idx = np.where(data[:,column] == data[:,column].min())
-    return outlier_idx
+for k in to_delete_idx:
+    del(my_dataset[k])
+```
 
-outlier_idx = 0
-outlier_idx = max_index(data, 3)
-data = np.delete(data, outlier_idx, 0)
-outlier_idx = max_index(data, 4)
-data = np.delete(data, outlier_idx, 0)
+Then I visualize the 4 features I pick, You may see to_messages.png, from_this_person_to_poi.png, total_payments.png, and director_fees.png file below, there is always seem a very big value in histogram.
 
-hist_and_save_pic(data[:,1], "to_messages")
-hist_and_save_pic(data[:,2], "from_this_person_to_poi")
-hist_and_save_pic(data[:,3], "total_payments")
-hist_and_save_pic(data[:,4], "director_fees")
+![to_messages](Pic/1.0 to_messages.png)
+![from_this_person_to_poi](Pic/1.0 from_this_person_to_poi.png)
+![total_payments](Pic/1.0 total_payments.png)
+![director_fees](Pic/1.0 director_fees.png)
+
+You can see that there is an outlier here which have very big total payment nd director fees, after find the key of this row, it turns out it's TOATAL! There is doubt that it's an outlier.
+![director_fees](Pic/1.0 scatter_plot.png)
+
+My code to visualize feature
+```
+df['to_messages'].hist()
+plt.show()
+df['from_this_person_to_poi'].hist()
+plt.show()
+df['total_payments'].hist()
+plt.show()
+df['director_fees'].hist()
+plt.show()
+df.plot.scatter(x='total_payments', y='director_fees')
+plt.show()
+```
+My code to find and delete TOTAL.
+```
+df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
+print df['total_payments'].dropna(how=any).idxmax()
+max_outlier = df['total_payments'].argmax()
+del(my_dataset[max_outlier])
 ```
 
 
