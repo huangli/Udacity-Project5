@@ -23,15 +23,6 @@ from tester import dump_classifier_and_data
 #  'from_messages', 'from_this_person_to_poi', 'shared_receipt_with_poi']
 features_list = ['poi', 'to_messages', 'from_poi_to_this_person', 'total_payments','director_fees']
 
-
-## After explore all the features, remove loan_advances,
-# restricted_stock_deferred, deferred_income, director_fees
-def hist_and_save_pic(data, name):
-    sns_plot = sns.distplot(data,  kde=False, rug=True, axlabel=name)
-    sns.plt.show()
-    # sns_plot.subplots.set_title(name)
-    sns_plot.get_figure().savefig('Pic/' + name +".png")
-
 ### Load the dictionary containing the dataset
 with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
@@ -54,8 +45,9 @@ for k in to_delete_idx:
     del(my_dataset[k])
 
 df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
-print df['total_payments'].dropna(how=any).idxmax()
+print df['total_payments'].idxmax()
 max_outlier = df['total_payments'].argmax()
+del(my_dataset[max_outlier])
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
@@ -101,32 +93,42 @@ from sklearn.preprocessing import MinMaxScaler
 features_train, features_test, labels_train, labels_test = \
     train_test_split(features, labels, test_size=0.2, random_state=42)
 
-# Set the parameters by cross-validation
-
+### Set the parameters by cross-validation
+### SVM
 tuned_parameters = {
                        'clf__C': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 1e2, 1e3, 1e4, 1e5],
-                       'clf__gamma': [0.0, 0.1, 0.2, 0.3],
-                       'clf__kernel': ['rbf', 'poly'],
+                       'clf__gamma': [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
+                       'clf__kernel': ['rbf'],
                        'clf__tol': [1e-1, 1e-2, 1e-4, 1e-5],
                        'clf__class_weight': [{True: 12, False: 1},
                                                {True: 10, False: 1},
+                                               {True: 9, False: 1},
                                                {True: 8, False: 1},
+                                               {True: 7, False: 1},
                                                {True: 4, False: 1},
                                                {True: 1, False: 1},
                                                 ]
                       }
 
-pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
-                ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
+pipe = Pipeline([('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
                 ('clf', SVC())])
-cv = StratifiedShuffleSplit(labels, n_iter = 20, test_size=0.2, random_state = 42)
+cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
 a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
 a_grid_search.fit(features, labels)
 clf = a_grid_search.best_estimator_
 
+# ## Decision Tree
+# tuned_parameters = {'clf__max_depth': [2, 3, 4, 5, 6, 7, 8, 9, 10],
+#                      'clf__min_samples_split': [2, 3, 4, 5, 6, 7, 8, 9, 10],
+#                      'clf__min_samples_leaf': [2, 3, 4, 5, 6, 7, 8, 9, 10]
+#                      }
+# pipe = Pipeline([('clf', tree.DecisionTreeClassifier())])
+# cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
+# a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
+# a_grid_search.fit(features, labels)
+# clf = a_grid_search.best_estimator_
 
-
-clf.fit(features_train, labels_train)
+### test
 pred = clf.predict(features_test)
 
 from sklearn.metrics import accuracy_score
@@ -137,7 +139,6 @@ print "accuracy", accuracy_score(pred, labels_test)
 print "precision", precision_score(pred, labels_test)
 print "recall", recall_score(pred, labels_test)
 
-# end
 
 # selector = SelectKBest(f_classif, k=4).fit(features_train, labels_train)
 # print selector.get_support()

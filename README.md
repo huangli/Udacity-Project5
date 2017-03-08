@@ -138,6 +138,7 @@ You can see that there is an outlier here which have very big total payment nd d
 
 My code to visualize feature
 ```
+df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
 df['to_messages'].hist()
 plt.show()
 df['from_this_person_to_poi'].hist()
@@ -161,7 +162,7 @@ del(my_dataset[max_outlier])
 ### 3. Features and Scaling
 #### 3.1 Features Selection
 I use SelectKBest to pick features, and select the top 4 features who get higher scores, you may see the pic below.
-![Pic/feature scores.png](/feature scores.png)
+![feature scores.png](/feature scores.png)
 The code is below.
 ```
 labels = features_list[1:]
@@ -208,17 +209,22 @@ for k1 in my_dataset:
 I use the MinMaxScaler for svm, since scaling is critical for svm I use a simple scaler but easy to deploy. It helps a lot to improve my precesion.
 
 ### 4. Pick and Tune an Algorithm
+#### 4.1 why we need tuning parameters
+The parameters can have a huge impact on performance, sometimes different parameters means trade-off between different metric, so we have to banlance and find the best setting. Even it's time consuming, it worths it.
 
+#### 4.2  parameter tuning process
 I tried SVM and DecisionTreeClassifier, and tune the parameters by GridSearchCV. You may see the code below:
 
 **SVM**
 ```
 tuned_parameters = {
-                       'clf__C': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 1e2, 1e5],
+                       'clf__C': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 1e2, 1e3, 1e4, 1e5],
                        'clf__gamma': [0.0, 0.1, 0.2, 0.3],
                        'clf__kernel': ['rbf', 'poly'],
                        'clf__tol': [1e-1, 1e-2, 1e-4, 1e-5],
                        'clf__class_weight': [{True: 12, False: 1},
+                                               {True: 10, False: 1},
+                                               {True: 8, False: 1},
                                                {True: 4, False: 1},
                                                {True: 1, False: 1},
                                                 ]
@@ -227,11 +233,10 @@ tuned_parameters = {
 pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
                 ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
                 ('clf', SVC())])
-# pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)), ('clf', SVC())])
-cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
+cv = StratifiedShuffleSplit(labels, n_iter = 20, test_size=0.2, random_state = 42)
 a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
 a_grid_search.fit(features, labels)
-print a_grid_search.best_score_
+clf = a_grid_search.best_estimator_
 ```
 **DecisionTree**
 ```
@@ -239,29 +244,33 @@ print a_grid_search.best_score_
                      'clf__min_samples_split': [2, 3, 4, 5, 6, 7, 8, 9, 10],
                      'clf__min_samples_leaf': [2, 3, 4, 5, 6, 7, 8, 9, 10]
                      }
-pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
-                ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
-                ('clf', tree.DecisionTreeClassifier)])
+pipe = Pipeline([('clf', tree.DecisionTreeClassifier())])
 cv = StratifiedShuffleSplit(labels, n_iter = 10, test_size=0.2, random_state = 42)
 a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
 a_grid_search.fit(features, labels)
+clf = a_grid_search.best_estimator_
 print a_grid_search.best_score_
 ```
 
 ### 5. Validation and Performance
-#### 5.1 Metrics
+#### 5.1 metrics
 Precesion
-> proportion of POI and those who are incorrectly identified as poi
+> ability to find all non-poi
 
 Recall
-> proportion of POI and those who are incorrectly identified as non-poi
+> ability to find all poi
 
+In order to find all poi, sometimes we label some non-poi as poi, the reverse is true. So we have to balance between precesion and recall, can't judge the performance of algorithm by one simple metric.
 
-#### 5.2 Validation
+#### 5.2 why validation
 
 Learning the parameters of a prediction function and testing it on the same data is a methodological mistake: a model that would just repeat the labels of the samples that it has just seen would have a perfect score but would fail to predict anything useful on yet-unseen data. This situation is called overfitting. So we need to split our dataset into 2 parts, training data to train our algorithm, and test data to validate performance.
 
-#### 5.3 Results
+#### 5.3 cross validation type
+
+There are many cross validation methods to choose, since our dataset is a highly unbanlanced dataset, very few true poi, it's not suitiable for K-fold. StratifiedShuffleSplit is a merge of StratifiedKFold and ShuffleSplit, which returns stratified randomized folds. The folds are made by preserving the percentage of samples for each class, it's suitable for our dataset.
+
+#### 5.4 results
 
 Testing by test.py
 > Accuracy: 0.81713 Precision: 0.33423  Recall: 0.37450 F1: 0.35322 F2: 0.36569
