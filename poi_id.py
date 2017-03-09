@@ -34,10 +34,10 @@ my_dataset = data_dict
 ### remove outiliers
 to_delete_idx = []
 for k in my_dataset:
-    if (my_dataset[k]['to_messages'] == 'NaN') \
-    and (my_dataset[k]['from_this_person_to_poi'] == 'NaN') \
-    and (my_dataset[k]['total_payments'] == 'NaN') \
-    and (my_dataset[k]['director_fees'] == 'NaN'):
+    if (my_dataset[k]['salary'] == 'NaN') \
+    and (my_dataset[k]['loan_advances'] == 'NaN') \
+    and (my_dataset[k]['deferred_income'] == 'NaN') \
+    and (my_dataset[k]['expenses'] == 'NaN'):
         to_delete_idx.append(k)
 
 for k in to_delete_idx:
@@ -45,12 +45,16 @@ for k in to_delete_idx:
 
 df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
 # print df['total_payments'].idxmax()
+# TOTAL row delete
+
 max_outlier = df['total_payments'].argmax()
 del(my_dataset[max_outlier])
+df = df.drop([max_outlier])
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
-print len(data)
+# print len(data)
+# print sum(data[:,0] == 0)
 
 labels, features = targetFeatureSplit(data)
 
@@ -88,8 +92,8 @@ features_train, features_test, labels_train, labels_test = \
 
 ### Set the parameters by cross-validation
 ## SVM
-# recall 1.0, C:1e-5, gamma:0, weight:true:6
-# precision:0.66, C:100, gamma:0.2, weight:2
+recall 1.0, C:1e-5, gamma:0, weight:true:6
+precision:0.66, C:100, gamma:0.2, weight:2
 tuned_parameters = {
                        'clf__C': [0.5, 0.75, 1.5],
                        'clf__gamma': [0.0, 0.1, 0.2],
@@ -102,7 +106,7 @@ pipe = Pipeline([('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
                 ('clf', SVC())])
 # scoring_parameters = 'precision,recall'
 cv = StratifiedShuffleSplit(labels, n_iter = 20, test_size=0.2, random_state = 42)
-a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, scoring='precision', cv=cv,  n_jobs=8)
+a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, scoring='precision', cv=cv, n_jobs=8)
 a_grid_search.fit(features, labels)
 clf = a_grid_search.best_estimator_
 
