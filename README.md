@@ -126,7 +126,7 @@ Then I visualize the 4 features I pick, you can see that there is an outlier her
 
 ![director_fees](Pic/scatter_before.png)
 ![salary](Pic/salary_before.png)
-![loan_advances](Pic/loan_advances_before.png)
+![loan_advances_before](Pic/loan_advances_before.png)
 ![deferred_income](Pic/deferred_income_before.png)
 ![expenses](Pic/expenses_before.png)
 
@@ -170,7 +170,8 @@ df = df.drop([max_outlier])
 
 ### 4. Features and Scaling
 #### 4.1 Features Selection
-I use SelectKBest to pick features, and select the top 4 features who get higher scores, you may see the pic below.
+I use SelectKBest to pick features, and select the top 4 features who get higher scores, you may see the pic below. They are
+dalary, loan_advances, deferred_income and expenses.
 ![feature scores.png](/feature scores.png)
 The code is below.
 ```
@@ -227,23 +228,18 @@ I tried SVM and DecisionTreeClassifier, and tune the parameters by GridSearchCV.
 **SVM**
 ```
 tuned_parameters = {
-                       'clf__C': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 1e2, 1e3, 1e4, 1e5],
-                       'clf__gamma': [0.0, 0.1, 0.2, 0.3],
-                       'clf__kernel': ['rbf', 'poly'],
+                       'clf__C': [0.5, 0.75, 1.5],
+                       'clf__gamma': [0.0, 0.1, 0.2],
+                       'clf__kernel': ['rbf'],
                        'clf__tol': [1e-1, 1e-2, 1e-4, 1e-5],
-                       'clf__class_weight': [{True: 12, False: 1},
-                                               {True: 10, False: 1},
-                                               {True: 8, False: 1},
-                                               {True: 4, False: 1},
-                                               {True: 1, False: 1},
-                                                ]
+                       'clf__class_weight': ['auto']
                       }
 
-pipe = Pipeline([('reduce_dim', SelectKBest(f_classif, k=4)),
-                ('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
+pipe = Pipeline([('min/max scaler', MinMaxScaler(feature_range=(0.0, 1.0))),
                 ('clf', SVC())])
+# scoring_parameters = 'precision,recall'
 cv = StratifiedShuffleSplit(labels, n_iter = 20, test_size=0.2, random_state = 42)
-a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, cv=cv, scoring='precision')
+a_grid_search = GridSearchCV(pipe, param_grid=tuned_parameters, scoring='precision', cv=cv, n_jobs=8)
 a_grid_search.fit(features, labels)
 clf = a_grid_search.best_estimator_
 ```
@@ -281,6 +277,7 @@ There are many cross validation methods to choose, since our dataset is a highly
 
 #### 6.4 results
 Testing by test.py
+
 | Metrics      | Value|
 | ------------- |:-------------:|
 | Precision        | 0.45773   |

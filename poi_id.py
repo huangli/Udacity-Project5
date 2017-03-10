@@ -92,8 +92,8 @@ features_train, features_test, labels_train, labels_test = \
 
 ### Set the parameters by cross-validation
 ## SVM
-recall 1.0, C:1e-5, gamma:0, weight:true:6
-precision:0.66, C:100, gamma:0.2, weight:2
+# recall 1.0, C:1e-5, gamma:0, weight:true:6
+# precision:0.66, C:100, gamma:0.2, weight:2
 tuned_parameters = {
                        'clf__C': [0.5, 0.75, 1.5],
                        'clf__gamma': [0.0, 0.1, 0.2],
