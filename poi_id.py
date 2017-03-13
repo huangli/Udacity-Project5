@@ -40,6 +40,7 @@ for k in my_dataset:
     and (my_dataset[k]['expenses'] == 'NaN'):
         to_delete_idx.append(k)
 
+
 for k in to_delete_idx:
     del(my_dataset[k])
 
@@ -47,9 +48,10 @@ df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
 # print df['total_payments'].idxmax()
 # TOTAL row delete
 
-max_outlier = df['total_payments'].argmax()
-del(my_dataset[max_outlier])
-df = df.drop([max_outlier])
+# max_outlier = df['total_payments'].argmax()
+total_outlier = 'TOTAL'
+del(my_dataset[total_outlier])
+df = df.drop([total_outlier])
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)

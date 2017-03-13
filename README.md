@@ -260,10 +260,10 @@ print a_grid_search.best_score_
 ### 6. Validation and Performance
 #### 6.1 metrics
 Precesion
-> ability to find all non-poi
+> How precise the algorithm are
 
 Recall
-> ability to find all poi
+> Ability to find all poi, how complete the results are
 
 In order to find all poi, sometimes we label some non-poi as poi, the reverse is true. So we have to balance between precesion and recall, can't judge the performance of algorithm by one simple metric.
 
