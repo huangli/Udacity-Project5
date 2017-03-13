@@ -162,9 +162,9 @@ My code to find and delete TOTAL.
 ```
 df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
 print df['total_payments'].dropna(how=any).idxmax()
-max_outlier = df['total_payments'].argmax()
-del(my_dataset[max_outlier])
-df = df.drop([max_outlier])
+total_outlier = 'TOTAL'
+del(my_dataset[total_outlier])
+df = df.drop([total_outlier])
 ```
 
 

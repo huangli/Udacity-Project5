@@ -4,7 +4,6 @@ import sys
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 import pandas as pd
 sys.path.append("../tools/")
 
@@ -45,6 +44,7 @@ for k in to_delete_idx:
     del(my_dataset[k])
 
 df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=np.float)
+print len(my_dataset)
 # print df['total_payments'].idxmax()
 # TOTAL row delete
 
