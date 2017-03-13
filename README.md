@@ -260,7 +260,7 @@ print a_grid_search.best_score_
 ### 6. Validation and Performance
 #### 6.1 metrics
 Precesion
-> How precise the algorithm are
+> How precise the guesses are
 
 Recall
 > Ability to find all poi, how complete the results are
