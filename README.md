@@ -260,10 +260,10 @@ print a_grid_search.best_score_
 ### 6. Validation and Performance
 #### 6.1 metrics
 Precesion
-> How precise the guesses are
+> How precise our guess about poi are true poi
 
 Recall
-> Ability to find all poi, how complete the results are
+> Likelihood that the classifier will correctly identify people as POI
 
 In order to find all poi, sometimes we label some non-poi as poi, the reverse is true. So we have to balance between precesion and recall, can't judge the performance of algorithm by one simple metric.
 
